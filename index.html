@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budgeting App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #6a11cb, #2575fc);
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #28a745;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #218838;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+    .ad-placeholder {
+      margin-top: 20px;
+      text-align: center;
+      padding: 10px;
+      background-color: #fff;
+      color: #000;
+      border-radius: 5px;
+    }
+    .signin-button {
+      margin-top: 20px;
+      background-color: #4285F4;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+    .signin-button:hover {
+      background-color: #357ae8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Budgeting App</h1>
+    <div id="user-status">Welcome: Guest</div>
+    <button class="signin-button" onclick="signInUser()">Sign in with Google</button>
+
+    <div>
+      <label for="goal">Goal Amount ($):</label>
+      <input type="number" id="goal" placeholder="Enter your goal amount">
+    </div>
+    <div>
+      <label for="savings">Current Savings ($):</label>
+      <input type="number" id="savings" placeholder="Enter your current savings">
+    </div>
+    <button class="button" onclick="calculateRemaining()">Calculate</button>
+    <div class="result" id="result">You need to save: $0.00</div>
+
+    <!-- Ad Placeholder -->
+    <div class="ad-placeholder">
+      <!-- Replace this with your actual Google AdSense script -->
+      <script async
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" <!-- Replace with your AdSense ID -->
+           data-ad-slot="XXXXXXXXXX" <!-- Replace with your Ad Slot -->
+           data-ad-format="auto"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
+    <button class="button" onclick="enableNotifications()">Enable Weekly Notifications</button>
+  </div>
+
+  <script>
+    // Placeholder for user authentication
+    function signInUser() {
+      // Simulated user sign-in
+      document.getElementById('user-status').innerText = 'Welcome: John Doe'; // Replace "John Doe" with real user data in a production app
+      alert('Signed in as John Doe!');
+    }
+
+    // Function to calculate remaining amount
+    function calculateRemaining() {
+      const goal = parseFloat(document.getElementById('goal').value) || 0;
+      const savings = parseFloat(document.getElementById('savings').value) || 0;
+      const remaining = Math.max(0, goal - savings);
+      document.getElementById('result').innerText = `You need to save: $${remaining.toFixed(2)}`;
+    }
+
+    // Function to enable browser notifications
+    function enableNotifications() {
+      if ("Notification" in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            sendNotification("Budgeting Reminder", "Don't forget to save for your goal this week!");
+          } else {
+            alert("Notifications are disabled.");
+          }
+        });
+      } else {
+        alert("Notifications are not supported in your browser.");
+      }
+    }
+
+    // Function to send notifications
+    function sendNotification(title, message) {
+      new Notification(title, {
+        body: message,
+        icon: "data:image/png;base64,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" // Replace with your app's icon
+      });
+    }
+  </script>
+</body>
+</html>
