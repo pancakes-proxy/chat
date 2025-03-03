@@ -2,9 +2,15 @@ import SwiftUI
 import LocalAuthentication
 import UserNotifications
 import AuthenticationServices
+import GoogleMobileAds
 
 @main
 struct BudgetingApp: App {
+    init() {
+        // Initialize Google Mobile Ads SDK
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -26,7 +32,11 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             if isAuthenticated {
-                mainContentView
+                VStack {
+                    mainContentView
+                    BannerAdView() // Add the banner ad at the bottom of the view
+                        .frame(height: 50)
+                }
             } else {
                 lockScreenView
             }
@@ -114,23 +124,19 @@ struct ContentView: View {
         let context = LAContext()
         var error: NSError?
         
-        // Check if the device supports biometrics or passcode
         if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
-            let reason = "Authenticate to access your budget"
+            let reason = "Authenticate to access your budgeting app"
             
             context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, authenticationError in
                 DispatchQueue.main.async {
                     if success {
-                        // Authentication successful
                         isAuthenticated = true
                     } else {
-                        // Authentication failed
                         print("Authentication failed: \(authenticationError?.localizedDescription ?? "Unknown error")")
                     }
                 }
             }
         } else {
-            // No biometric or passcode support
             print("Authentication not available: \(error?.localizedDescription ?? "Unknown error")")
         }
     }
@@ -145,7 +151,7 @@ struct ContentView: View {
     
     func scheduleWeeklyNotification(remainingAmount: Double) {
         let content = UNMutableNotificationContent()
-        content.title = "Reminder"
+        content.title = "Budgeting Reminder"
         content.body = "You still need to save $\(remainingAmount, specifier: "%.2f") to reach your goal!"
         content.sound = .default
         
@@ -161,6 +167,20 @@ struct ContentView: View {
                 print("Error scheduling notification: \(error)")
             }
         }
+    }
+}
+
+struct BannerAdView: UIViewRepresentable {
+    func makeUIView(context: Context) -> GADBannerView {
+        let bannerView = GADBannerView(adSize: GADAdSizeBanner)
+        bannerView.adUnitID = "ca-app-pub-2596258669748338/2454154397" // Replace with your Ad Unit ID
+        bannerView.rootViewController = UIApplication.shared.windows.first?.rootViewController
+        bannerView.load(GADRequest())
+        return bannerView
+    }
+    
+    func updateUIView(_ uiView: GADBannerView, context: Context) {
+        // Update the banner view if needed
     }
 }
 
