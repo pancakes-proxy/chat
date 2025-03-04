@@ -88,7 +88,7 @@
   <div class="container">
     <h1>Budgeting App</h1>
     <div id="user-status">Welcome: Guest</div>
-    <button class="signin-button" onclick="usersignin()">Sign in with Google</button>
+    <button class="signin-button" onclick="start()">Sign in with Google</button>
 
     <div>
       <label for="goal">Goal Amount ($):</label>
@@ -121,29 +121,39 @@
   </div>
 
   
- <script src="https://apis.google.com/js/api.js"></script>
+<script src="https://apis.google.com/js/api.js"></script>
 <script>
-function usersignin() {
-  // 2. Initialize the JavaScript client library.
-  gapi.client.init({
-    'apiKey': 'AIzaSyDjYmG9NNMX18mG5iHPYhFABCyi_ZhrXZM',
-    // clientId and scope are optional if auth is not required.
-    'clientId': 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
-    'scope': 'profile',
-  }).then(function() {
-    // 3. Initialize and make the API request.
-    return gapi.client.request({
-      'path': 'https://people.googleapis.com/v1/people/me?requestMask.includeField=person.names',
-    })
-  }).then(function(response) {
-    console.log(response.result);
-  }, function(reason) {
-    console.log('Error: ' + reason.result.error.message);
-  });
-};
-// 1. Load the JavaScript client library.
-gapi.load('client', start);
+  function start() {
+    // 2. Initialize the JavaScript client library.
+    gapi.client
+      .init({
+        apiKey: 'AIzaSyDjYmG9NNMX18mG5iHPYhFABCyi_ZhrXZM', // Replace with your actual API Key
+        clientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com', // Replace with your Web Client ID
+        scope: 'profile email', // Include 'email' to get the user's email address
+      })
+      .then(function () {
+        // 3. Initialize and make the API request.
+        gapi.auth2
+          .getAuthInstance()
+          .signIn()
+          .then(function (user) {
+            const profile = user.getBasicProfile();
+            console.log('Name: ' + profile.getName());
+            console.log('Email: ' + profile.getEmail());
+            // You can also display this information in your app
+            document.getElementById('user-info').innerText =
+              'Welcome, ' + profile.getName();
+          });
+      })
+      .catch(function (error) {
+        console.log('Error during client initialization: ' + error.message);
+      });
+  }
+
+  // 1. Load the JavaScript client library.
+  gapi.load('client:auth2', start);
 </script>
+
 <script>
     // Function to calculate remaining amount
     function calculateRemaining() {
