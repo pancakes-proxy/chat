@@ -1,0 +1,20 @@
+<Window x:Class="BudgetingApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Budgeting App" Height="400" Width="600">
+    <Grid>
+        <TextBlock Text="Budgeting App" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+        
+        <TextBlock Text="Goal Amount ($):" HorizontalAlignment="Left" Margin="50,70,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="GoalAmountInput" HorizontalAlignment="Left" Margin="200,70,0,0" VerticalAlignment="Top" Width="200"/>
+
+        <TextBlock Text="Current Savings ($):" HorizontalAlignment="Left" Margin="50,120,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="CurrentSavingsInput" HorizontalAlignment="Left" Margin="200,120,0,0" VerticalAlignment="Top" Width="200"/>
+
+        <Button Content="Calculate" HorizontalAlignment="Center" VerticalAlignment="Top" Width="100" Margin="0,170,0,0" Click="CalculateButton_Click"/>
+
+        <TextBlock x:Name="ResultText" Text="You need to save: $0.00" HorizontalAlignment="Center" Margin="0,220,0,0" VerticalAlignment="Top" FontSize="16"/>
+
+        <Button Content="Enable Weekly Notifications" HorizontalAlignment="Center" VerticalAlignment="Top" Width="200" Margin="0,270,0,0" Click="EnableNotificationsButton_Click"/>
+    </Grid>
+</Window>
