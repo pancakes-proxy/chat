@@ -88,7 +88,7 @@
   <div class="container">
     <h1>Budgeting App</h1>
     <div id="user-status">Welcome: Guest</div>
-    <button class="signin-button" onclick="signInUser()">Sign in with Google</button>
+    <button class="signin-button" onclick="usersignin()">Sign in with Google</button>
 
     <div>
       <label for="goal">Goal Amount ($):</label>
@@ -120,13 +120,30 @@
     <button class="button" onclick="enableNotifications()">Enable Weekly Notifications</button>
   </div>
 
-  <script>
-    // Placeholder for user authentication
-    function signInUser() {
-      // Simulated user sign-in
-      document.getElementById('user-status').innerText = 'Welcome: John Doe'; // Replace "John Doe" with real user data in a production app
-      alert('Signed in as John Doe!');
-    }
+  
+ <script src="https://apis.google.com/js/api.js"></script>
+<script>
+function usersignin() {
+  // 2. Initialize the JavaScript client library.
+  gapi.client.init({
+    'apiKey': 'AIzaSyDjYmG9NNMX18mG5iHPYhFABCyi_ZhrXZM',
+    // clientId and scope are optional if auth is not required.
+    'clientId': 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
+    'scope': 'profile',
+  }).then(function() {
+    // 3. Initialize and make the API request.
+    return gapi.client.request({
+      'path': 'https://people.googleapis.com/v1/people/me?requestMask.includeField=person.names',
+    })
+  }).then(function(response) {
+    console.log(response.result);
+  }, function(reason) {
+    console.log('Error: ' + reason.result.error.message);
+  });
+};
+// 1. Load the JavaScript client library.
+gapi.load('client', start);
+</script>
 
     // Function to calculate remaining amount
     function calculateRemaining() {
